@@ -26,7 +26,7 @@ Aşağıdaki adımları takip ederek projeyi kendi ortamınızda çalıştırabi
 
 önce **Metro** bağlantısını başlatmanız gerekmektedir.
 
-Metro'yu başlatmak için React Native projenizde aşağıdaki komutu çalıştırın:
+Metro sunucusunu başlatmak için React Native projenizde aşağıdaki komutu çalıştırın:
 ```bash
 # npm kullanımı
 npm start
