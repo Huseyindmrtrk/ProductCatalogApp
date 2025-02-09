@@ -6,7 +6,5 @@ export const store = configureStore({
     favorites: favoriteReducer,
   },
 });
-
-// RootState ve AppDispatch türlerini ekleyerek TypeScript entegrasyonunu sağlıyoruz.
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

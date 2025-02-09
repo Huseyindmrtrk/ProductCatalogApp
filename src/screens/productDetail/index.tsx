@@ -31,7 +31,7 @@ const ProductDetail: React.FC = () => {
     } catch (err) {
       setError('Error fetching product details');
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 50);
     }
   };
 
@@ -45,6 +45,7 @@ const ProductDetail: React.FC = () => {
     }
     setIsFavorited(!isFavorited);
   };
+
   useEffect(() => {
     fetchProductDetail(id);
   }, [id]);
@@ -139,16 +140,21 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   favoriteButton: {
-    marginTop: 16,
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    marginTop: 24,
+    backgroundColor: '#FF6F61',
+    paddingVertical: 14,
+    paddingHorizontal: 30,
+    borderRadius: 50,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
   },
   favoriteText: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: '700',
   },
   errorText: {
     color: 'red',
@@ -162,7 +168,7 @@ const styles = StyleSheet.create({
   skeletonCarousel: {
     width: '100%',
     height: 200,
-    backgroundColor: '#ccc',
+    backgroundColor: '#e0e0e0',
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -172,13 +178,13 @@ const styles = StyleSheet.create({
   skeletonTitleLine: {
     width: '80%',
     height: 20,
-    backgroundColor: '#ccc',
+    backgroundColor: '#e0e0e0',
     borderRadius: 4,
   },
   skeletonPrice: {
     width: '40%',
     height: 20,
-    backgroundColor: '#ccc',
+    backgroundColor: '#e0e0e0',
     borderRadius: 4,
     marginVertical: 8,
   },
@@ -188,16 +194,17 @@ const styles = StyleSheet.create({
   skeletonDescriptionLine: {
     width: '100%',
     height: 14,
-    backgroundColor: '#ccc',
+    backgroundColor: '#e0e0e0',
     borderRadius: 4,
   },
   skeletonStock: {
     width: '30%',
     height: 20,
-    backgroundColor: '#ccc',
+    backgroundColor: '#e0e0e0',
     borderRadius: 4,
     marginTop: 8,
   },
 });
+
 
 export default ProductDetail;

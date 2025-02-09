@@ -26,6 +26,7 @@ const Home: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'ProductDetail'>>();
 
   const fetchProducts = async (pageNumber: number) => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`https://dummyjson.com/products?limit=30&skip=${(pageNumber - 1) * 30}`);
       if (pageNumber === 1) {
@@ -46,11 +47,15 @@ const Home: React.FC = () => {
   }, [page]);
 
   useEffect(() => {
-    if (searchQuery === '') {
-      setFilteredData(data);
-    } else {
-      setFilteredData(data.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase())));
-    }
+    const timeoutId = setTimeout(() => {
+      if (searchQuery === '') {
+        setFilteredData(data);
+      } else {
+        setFilteredData(data.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase())));
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
   }, [searchQuery, data]);
 
   const handleRefresh = () => {
@@ -87,12 +92,15 @@ const Home: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={{ alignSelf: "flex-end", height: 40, backgroundColor: "#bbefe5", width: 60, justifyContent: "center", alignItems: "center", marginVertical: 10 }}
-        onPress={() => navigation.navigate('Favorites')}
-      >
-        <Text>Favorites</Text>
-      </TouchableOpacity>
+      <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 10}}>
+        <Text style={{fontWeight: "600", fontSize: 20}}>Home</Text>
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end", height: 40, backgroundColor: "#bbefe5", width: 60, justifyContent: "center", alignItems: "center" }}
+          onPress={() => navigation.navigate('Favorites')}
+        >
+          <Text>Favorites</Text>
+        </TouchableOpacity>
+      </View>
       <SearchBox value={searchQuery} onChangeText={setSearchQuery} />
       {error && <Text style={styles.errorText}>{error}</Text>}
       {isLoading && page === 1 && (
@@ -133,11 +141,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
     padding: 10,
-    alignItems: 'center',
   },
   image: {
-    width: 120,
-    height: 120,
+    width: '100%',
+    aspectRatio: 1,
     borderRadius: 8,
   },
   title: {
