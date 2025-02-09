@@ -82,6 +82,14 @@ You've successfully run and modified your React Native App. :partying_face:
 - If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
 - If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
 
+# App Overview
+This app is a product catalog application where users can:
+
+Search for products
+Browse product listings
+Add products to favorites
+The app allows users to interact with product data, search for specific items, and save favorite items for later access. It uses Redux for state management and implements skeleton loading for a smooth user experience while data is being fetched.
+
 # Troubleshooting
 
 If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
