@@ -7,38 +7,11 @@ import ProductSkeleton from '../../components/ProductSkeleton.tsx';
 import axios from 'axios';
 import SearchBox from '../../components/SearchBox.tsx';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  tags: string[];
-  brand: string;
-  sku: string;
-  weight: number;
-  dimensions: object;
-  warrantyInformation: string;
-  shippingInformation: string;
-  availabilityStatus: string;
-  reviews: object[];
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  meta: object[];
-  images: string[];
-  thumbnail: string;
-}
-
-interface ApiResponse {
-  products: Product[];
-}
+import { Product } from "../../components/types.ts"
 
 type RootStackParamList = {
   ProductDetail: { id: number };
+  Favorites: undefined;
 };
 
 const Home: React.FC = () => {
@@ -114,6 +87,12 @@ const Home: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{ alignSelf: "flex-end", height: 40, backgroundColor: "#bbefe5", width: 60, justifyContent: "center", alignItems: "center", marginVertical: 10 }}
+        onPress={() => navigation.navigate('Favorites')}
+      >
+        <Text>Favorites</Text>
+      </TouchableOpacity>
       <SearchBox value={searchQuery} onChangeText={setSearchQuery} />
       {error && <Text style={styles.errorText}>{error}</Text>}
       {isLoading && page === 1 && (

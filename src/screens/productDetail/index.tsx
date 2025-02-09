@@ -1,38 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavorite, removeFavorite } from '../../store/favoriteSlice.ts';
 import { fetchData } from '../../utils';
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  tags: string[];
-  brand: string;
-  sku: string;
-  weight: number;
-  dimensions: object;
-  warrantyInformation: string;
-  shippingInformation: string;
-  availabilityStatus: string;
-  reviews: object[];
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  meta: object[];
-  images: string[];
-  thumbnail: string;
-}
+import { Product } from '../../components/types.ts';
 
 type ProductDetailRouteProp = RouteProp<{ ProductDetail: { id: number } }, 'ProductDetail'>;
 
 const ProductDetail: React.FC = () => {
   const route = useRoute<ProductDetailRouteProp>();
   const { id } = route.params;
+
+  const dispatch = useDispatch();
+  const { favorites } = useSelector((state: any) => state.favorites);
 
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -55,19 +36,38 @@ const ProductDetail: React.FC = () => {
   };
 
   const toggleFavorite = () => {
+    if (isFavorited) {
+      dispatch(removeFavorite(id));
+    } else {
+      if (product) {
+        dispatch(addFavorite(product));
+      }
+    }
     setIsFavorited(!isFavorited);
   };
-
   useEffect(() => {
     fetchProductDetail(id);
   }, [id]);
 
+  useEffect(() => {
+    setIsFavorited(favorites.some((fav: Product) => fav.id === id));
+  }, [favorites, id]);
+
   const renderSkeletonLoading = () => (
     <View style={styles.skeleton}>
-      <View style={styles.skeletonImage} />
-      <View style={styles.skeletonText} />
-      <View style={styles.skeletonText} />
-      <View style={styles.skeletonText} />
+      <View style={styles.skeletonCarousel} />
+      <View style={styles.skeletonTitleContainer}>
+        <View style={styles.skeletonTitleLine} />
+        <View style={[styles.skeletonTitleLine, { marginTop: 4 }]} />
+      </View>
+      <View style={styles.skeletonPrice} />
+      <View style={styles.skeletonDescriptionContainer}>
+        <View style={styles.skeletonDescriptionLine} />
+        <View style={[styles.skeletonDescriptionLine, { marginTop: 4 }]} />
+        <View style={[styles.skeletonDescriptionLine, { marginTop: 4 }]} />
+        <View style={[styles.skeletonDescriptionLine, { marginTop: 4 }]} />
+      </View>
+      <View style={styles.skeletonStock} />
     </View>
   );
 
@@ -98,12 +98,10 @@ const ProductDetail: React.FC = () => {
             renderItem={renderPhotos}
             keyExtractor={(item, index) => index.toString()}
           />
-
           <Text style={styles.title}>{product.title}</Text>
           <Text style={styles.price}>${product.price}</Text>
           <Text style={styles.stock}>Stock: {product.stock}</Text>
           <Text>{product.description}</Text>
-
           <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
             <Text style={styles.favoriteText}>
               {isFavorited ? 'Remove from Favorites' : 'Add to Favorites'}
@@ -161,19 +159,44 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  skeletonImage: {
-    width: 300,
+  skeletonCarousel: {
+    width: '100%',
     height: 200,
     backgroundColor: '#ccc',
     borderRadius: 8,
     marginBottom: 16,
   },
-  skeletonText: {
+  skeletonTitleContainer: {
+    marginBottom: 8,
+  },
+  skeletonTitleLine: {
     width: '80%',
     height: 20,
     backgroundColor: '#ccc',
-    marginBottom: 8,
     borderRadius: 4,
+  },
+  skeletonPrice: {
+    width: '40%',
+    height: 20,
+    backgroundColor: '#ccc',
+    borderRadius: 4,
+    marginVertical: 8,
+  },
+  skeletonDescriptionContainer: {
+    marginVertical: 8,
+  },
+  skeletonDescriptionLine: {
+    width: '100%',
+    height: 14,
+    backgroundColor: '#ccc',
+    borderRadius: 4,
+  },
+  skeletonStock: {
+    width: '30%',
+    height: 20,
+    backgroundColor: '#ccc',
+    borderRadius: 4,
+    marginTop: 8,
   },
 });
 
